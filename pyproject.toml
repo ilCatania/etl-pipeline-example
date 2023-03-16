@@ -5,7 +5,6 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "etl-pipeline-example"
 description = "ETL pipeline exampleETL pipeline example"
-repository = "https://github.com/ilcatania/etl-pipeline-example/"
 readme = "README.md"
 requires-python = ">=3.10"
 keywords = []
@@ -16,6 +15,9 @@ classifiers = [
 dependencies = [
 ]
 dynamic = ["version"]
+
+[project.urls]
+repository = "https://github.com/ilcatania/etl-pipeline-example/"
 
 [project.optional-dependencies]
 dev = [
