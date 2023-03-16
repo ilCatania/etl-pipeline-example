@@ -1,0 +1,61 @@
+[build-system]
+requires = ["setuptools>=45", "setuptools_scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "etl-pipeline-example"
+description = "ETL pipeline exampleETL pipeline example"
+repository = "https://github.com/ilcatania/etl-pipeline-example/"
+readme = "README.md"
+requires-python = ">=3.10"
+keywords = []
+license = {text = "Apache Software License 2.0"}
+classifiers = [
+  "Programming Language :: Python :: 3",
+]
+dependencies = [
+]
+dynamic = ["version"]
+
+[project.optional-dependencies]
+dev = [
+  'black',
+  'isort',
+  'flake8',
+  'flake8-docstrings',
+  'pre-commit',
+]
+tests = [
+  'pytest',
+]
+
+[tool.setuptools_scm]
+
+[tool.isort]
+profile = "black"
+
+[tool.black]
+line-length = 80
+
+[tool.pytest.ini_options]
+minversion = '6.0'
+log_level = "INFO"
+
+[tool.coverage.run]
+branch = true
+source = ['etl_pipeline_example']
+omit = ['tests/*']
+
+[tool.coverage.paths]
+source = ['src', '*/site-packages']
+
+[tool.coverage.report]
+exclude_lines = [
+  'pragma: no-cover',
+  'def __repr__',
+  'raise AssertionError',
+  'raise NotImplementedError',
+  'if __name__ == .__main__.:',
+]
+show_missing = true
+fail_under = 90

@@ -1,0 +1,14 @@
+[flake8]
+exclude =
+    .git/
+    __pycache__
+    tests/
+    venv/
+extend-ignore =
+    # missing docstring in public module
+    D100
+    # missing docstring in public package
+    D104
+    # missing docstring in __init__
+    D107
+max-line-length = 80
