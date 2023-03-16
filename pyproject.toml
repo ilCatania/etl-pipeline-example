@@ -13,6 +13,8 @@ classifiers = [
   "Programming Language :: Python :: 3",
 ]
 dependencies = [
+  "numpy~=1.24.2",
+  "pandas~=1.5.3",
 ]
 dynamic = ["version"]
 
