@@ -45,5 +45,5 @@ dist/
 .idea/**/uiDesigner.xml
 .idea/**/dbnavigator.xml
 
-# project specific test files
+# project specific integration test files
 tests/__files/*.pkl

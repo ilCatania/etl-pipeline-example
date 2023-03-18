@@ -18,8 +18,8 @@ def testfile() -> Callable[[Union[str, os.PathLike]], Path]:
 
 
 @pytest.fixture(scope="session")
-def create_test_data(testfile):
-    """Create some market and company return data for use during tests."""
+def integration_test_data(testfile):
+    """Create a lot of market and company return data for use during tests."""
     from itertools import repeat
 
     import numpy as np
