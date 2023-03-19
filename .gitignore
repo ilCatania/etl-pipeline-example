@@ -3,9 +3,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# test reports in bitbucket pipelines
-test-reports/
-
 # virtual environments
 venv/
 
@@ -35,6 +32,8 @@ venv/
 *.egg-info/
 dist/
 .coverage
+coverage.xml
+junit/
 
 # Sensitive or high-churn files
 .idea/**/dataSources/
