@@ -52,7 +52,7 @@ source = ['etl_pipeline_example']
 omit = ['tests/*']
 
 [tool.coverage.paths]
-source = ['src', '*/site-packages']
+source = ['src', '*/site-packages/etl_pipeline_example']
 
 [tool.coverage.report]
 exclude_lines = [
