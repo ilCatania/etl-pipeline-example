@@ -31,6 +31,7 @@ venv/
 .idea/**/contentModel.xml
 *.egg-info/
 dist/
+build/
 .coverage
 coverage.xml
 junit/
