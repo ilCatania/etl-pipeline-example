@@ -4,6 +4,12 @@ from typing import Callable, Union
 
 import pytest
 
+from etl_pipeline_example.create_dataset import (
+    company_data,
+    date_index,
+    returns_data,
+)
+
 
 @pytest.fixture
 def testfile() -> Callable[[Union[str, os.PathLike]], Path]:
@@ -20,35 +26,12 @@ def testfile() -> Callable[[Union[str, os.PathLike]], Path]:
 @pytest.fixture(scope="session")
 def integration_test_data(testfile):
     """Create a lot of market and company return data for use during tests."""
-    from itertools import repeat
-
-    import numpy as np
-    import pandas as pd
-
-    # make randomisation deterministic
-    pd.core.common.random_state(42)
-
-    dates = pd.bdate_range("2000-01-01", pd.Timestamp.today())
-    n_companies = 5000
-    n_dates = 4000
-    index = [
-        list(
-            zip(repeat(i), np.random.choice(dates, size=n_dates, replace=False))
-        )
-        for i in range(n_companies)
-    ]
-    index = [x for y in index for x in y]
-    index = pd.MultiIndex.from_tuples(index, names=["companyid", "date"])
-    returns = np.random.normal(loc=0, scale=0.012, size=n_companies * n_dates)
-    df = pd.Series(index=index, data=returns, name="returns")
-
-    mkt_returns = np.random.normal(loc=0, scale=0.008, size=len(dates))
-    market = pd.Series(index=dates, data=mkt_returns)
-
-    testfiles_dir = Path(__file__).parent.joinpath("__files")
-    company_returns_file = testfiles_dir / "company_returns.pkl"
-    market_returns_file = testfiles_dir / "market_returns.pkl"
-    df.to_pickle(company_returns_file)
+    dates = date_index()
+    comp = company_data(dates)
+    market = returns_data(dates)
+    company_returns_file = testfile("company_returns.pkl")
+    market_returns_file = testfile("market_returns.pkl")
+    comp.to_pickle(company_returns_file)
     market.to_pickle(market_returns_file)
     yield
     company_returns_file.unlink()
