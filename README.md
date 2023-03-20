@@ -1,6 +1,9 @@
+[![Build](https://github.com/ilCatania/etl-pipeline-example/actions/workflows/python-build.yml/badge.svg)](https://github.com/ilCatania/etl-pipeline-example/actions/workflows/python-build.yml)
+[![codecov](https://codecov.io/gh/ilCatania/etl-pipeline-example/branch/master/graph/badge.svg?token=S42VL6ZU57)](https://codecov.io/gh/ilCatania/etl-pipeline-example)
+
 # etl-pipeline-example
 
-ETL pipeline exampleETL pipeline example
+ETL pipeline example.
 
 ## Installation
 
