@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "etl-pipeline-example"
-description = "ETL pipeline exampleETL pipeline example"
+description = "ETL pipeline example"
 readme = "README.md"
 requires-python = ">=3.10"
 keywords = []
