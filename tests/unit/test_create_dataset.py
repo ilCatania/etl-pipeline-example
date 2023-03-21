@@ -24,7 +24,8 @@ def test_create_companies(testfile):
         dtype={"companyid": "int64", "returns": "float64"},
         index_col=["companyid", "date"],
     ).squeeze("columns")
-    actual = company_data(n_companies=3, n_dates=5, random_seed=5)
+    dates = date_index("2000-01-01", "2023-03-20")
+    actual = company_data(dates, n_companies=3, n_dates=5, random_seed=5)
     assert_series_equal(actual, expected)
 
 
