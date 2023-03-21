@@ -11,6 +11,8 @@ class ResampleStrategy(Enum):
     """Fill with zeroes when returns are missing."""
     NA_FILL = "na-fill"
     """Fill with NAs when returns are missing."""
+    INTERPOLATE_LINEAR = "interpolate-linear"
+    """Fill with linearly interpolated values."""
 
 
 def resample_company_returns(
@@ -37,3 +39,7 @@ def resample_company_returns(
         return resampled.sum()
     elif strategy == ResampleStrategy.NA_FILL:
         return resampled.sum(min_count=1)
+    elif strategy == ResampleStrategy.INTERPOLATE_LINEAR:
+        return resampled.sum(min_count=1).interpolate("linear")
+    else:
+        raise NotImplementedError(f"Not implemented: {strategy}")
