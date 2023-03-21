@@ -27,7 +27,7 @@ def resample_company_returns(
     input period. This assumes the input company data series has a multi index
     containing companyid and date.
 
-    :param company_data:
+    :param company_data:the company data
     :param target_freq: the target frequency to resample to.
     :param strategy: the resample strategy, e.g. fill with zeroes where returns
         are missing.
@@ -43,3 +43,23 @@ def resample_company_returns(
         return resampled.sum(min_count=1).interpolate("linear")
     else:
         raise NotImplementedError(f"Not implemented: {strategy}")
+
+
+def rolling_corr(
+    company_data: pd.Series, market_data: pd.Series, window: int
+) -> pd.Series:
+    """
+    Calculate rolling correlation between company and market data.
+
+    :param company_data: the company data
+    :param market_data: the market data
+    :param window: the window to use
+    :return: the correlation
+    """
+    res = company_data.groupby("companyid").rolling(window).corr(market_data)
+
+    # FIXME figure out why there's a duplicate companyid index column and remove
+    #  this hack
+    res.index = res.index.droplevel()
+
+    return res
