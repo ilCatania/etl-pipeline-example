@@ -17,9 +17,9 @@ def test_resample_company_single():
             [
                 [0],
                 [
-                    pd.Timestamp("2023-02-13"),
-                    pd.Timestamp("2023-02-20"),
-                    pd.Timestamp("2023-02-23"),
+                    pd.Timestamp("2023-02-13"),  # Monday
+                    pd.Timestamp("2023-02-20"),  # Monday
+                    pd.Timestamp("2023-02-23"),  # Thursday
                 ],
             ],
             names=["companyid", "date"],
