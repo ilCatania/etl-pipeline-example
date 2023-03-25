@@ -15,6 +15,16 @@ def test_date_index_default_args():
     assert_index_equal(actual, expected)
 
 
+def test_create_default_dates():
+    """Check that default dates are used if none specified."""
+    expected_dates = date_index()
+    cd = company_data(n_companies=1, n_dates=len(expected_dates))
+    cd_dates = cd.index.get_level_values(1)
+    assert set(cd_dates) == set(expected_dates)  # order is randomized
+    ret = returns_data()
+    assert_index_equal(ret.index, expected_dates)
+
+
 def test_create_companies(testfile):
     """Check that the company returns data function always generates the same
     data when given the same seed.
