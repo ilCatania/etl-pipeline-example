@@ -1,5 +1,6 @@
 from itertools import repeat
-from typing import Any
+from pathlib import Path
+from typing import Any, Tuple
 
 import numpy as np
 import pandas as pd
@@ -73,3 +74,34 @@ def returns_data(
     np.random.seed(random_seed)
     mkt_returns = np.random.normal(loc=0, scale=0.008, size=len(dates))
     return pd.Series(index=dates, data=mkt_returns, name="returns")
+
+
+def write_dataset(
+    dataset_dir: Path,
+    history_start: str | pd.Timestamp = "2000-01-01",
+    history_end: str | pd.Timestamp | None = None,
+    n_companies: int = 5000,
+    n_dates: int = 4000,
+    random_seed: Any = DEFAULT_RANDOM_SEED,
+) -> Tuple[Path, Path]:
+    """Write a dataset of company and market returns using pickle.
+
+    :param history_start: the history start date.
+    :param history_end: the history end date, or None to use today.
+    :param dataset_dir: the directory to write into.
+    :param n_companies: the number of companies in the dataset.
+    :param n_dates: the number of dates for which companies have returns.
+    :param random_seed: an optional random seed for repeatable results.
+    :return: paths to the company and market return files respectively.
+    """
+    dates = date_index(history_start=history_start, history_end=history_end)
+    comp = company_data(
+        dates, n_companies=n_companies, n_dates=n_dates, random_seed=random_seed
+    )
+    market = returns_data(dates, random_seed=random_seed)
+    cr = dataset_dir / "company_returns.pkl"
+    mr = dataset_dir / "market_returns.pkl"
+    dataset_dir.mkdir(exist_ok=True, parents=True)
+    comp.to_pickle(cr)
+    market.to_pickle(mr)
+    return cr, mr

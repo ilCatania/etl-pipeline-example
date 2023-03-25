@@ -5,6 +5,7 @@ from etl_pipeline_example.create_dataset import (
     company_data,
     date_index,
     returns_data,
+    write_dataset,
 )
 
 
@@ -42,3 +43,48 @@ def test_create_returns(testfile):
     dates = date_index("2023-02-12", "2023-02-26")
     actual = returns_data(dates, random_seed=13)
     assert_series_equal(actual, expected, check_freq=False)
+
+
+def test_write_dataset(tmp_path):
+    expected_comp = pd.Series(
+        name="returns",
+        index=pd.MultiIndex.from_tuples(
+            [
+                (0, pd.Timestamp("2022-01-20")),
+                (0, pd.Timestamp("2022-01-19")),
+                (1, pd.Timestamp("2022-01-20")),
+                (1, pd.Timestamp("2022-01-10")),
+                (2, pd.Timestamp("2022-01-13")),
+                (2, pd.Timestamp("2022-01-18")),
+            ],
+            names=["companyid", "date"],
+        ),
+        data=[0.03285, 0.0134, 0.01889, -0.001, 0.005720839515684686, -0.0073],
+    )
+    expected_mkt = pd.Series(
+        name="returns",
+        index=pd.bdate_range("2022-01-10", "2022-01-20", name="date"),
+        data=[
+            0.00378,
+            -0.0054,
+            0.00193,
+            -0.0136,
+            0.0060,
+            -0.0122,
+            0.00004,
+            -0.0009,
+            -0.0064,
+        ],
+    )
+    write_dataset(
+        tmp_path,
+        history_start="2022-01-10",
+        history_end="2022-01-20",
+        n_companies=3,
+        n_dates=2,
+        random_seed=12,
+    )
+    actual_comp = pd.read_pickle(tmp_path / "company_returns.pkl")
+    actual_mkt = pd.read_pickle(tmp_path / "market_returns.pkl")
+    assert_series_equal(actual_comp, expected_comp, atol=1e-4)
+    assert_series_equal(actual_mkt, expected_mkt, atol=1e-4)
