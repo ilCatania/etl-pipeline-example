@@ -25,12 +25,12 @@ def test_create_default_dates():
     assert_index_equal(ret.index, expected_dates)
 
 
-def test_create_companies(testfile):
+def test_create_companies(testfiles):
     """Check that the company returns data function always generates the same
     data when given the same seed.
     """
     expected = pd.read_csv(
-        testfile("expected_companies.csv"),
+        testfiles / "expected_companies.csv",
         parse_dates=["date"],
         dtype={"companyid": "int64", "returns": "float64"},
         index_col=["companyid", "date"],
@@ -40,12 +40,12 @@ def test_create_companies(testfile):
     assert_series_equal(actual, expected)
 
 
-def test_create_returns(testfile):
+def test_create_returns(testfiles):
     """Check that the market returns data function always generates the same
     data when given the same seed.
     """
     expected = pd.read_csv(
-        testfile("expected_returns.csv"),
+        testfiles / "expected_returns.csv",
         parse_dates=True,
         dtype="float64",
         index_col="date",
