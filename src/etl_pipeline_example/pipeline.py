@@ -93,7 +93,8 @@ def run_pipeline(data_dir: Path):
     #   I'm storing the data in an arrow dataset made up of parquet partitions,
     #   for now arbitrarily setting a number of partitions
     log.info("Storing company data...")
-    n_partitions = 64
+    n_companies = len(company_data.index.levels[0])
+    n_partitions = max(1, n_companies // 16)
     company_ids = company_data_resampled.index.get_level_values(0)
     partition_values = company_ids % n_partitions
     company_data_with_partitions = pd.DataFrame(company_data_resampled).assign(
@@ -122,21 +123,37 @@ def run_pipeline(data_dir: Path):
     log_mem_usage(log, market_data, "Original market data")
     market_data = pd.to_numeric(market_data, downcast="float")
     log_mem_usage(log, market_data, "Downcasted market data")
+
+    # try to save some memory
+    del (
+        company_data,
+        company_data_resampled,
+        company_data_with_partitions,
+        company_ids,
+        company_table,
+        partition_values,
+    )
+
     # calculate for each company the correlation to the market on a rolling
     # 2 year basis. State any modelling assumptions made.
     #   Assumption: company returns for missing days are interpolated. Change
     #   the assumption by using a different ResampleStrategy above
     log.info("Calculating correlations...")
     two_years = 262 * 2  # 2 years window in business days
-    corrs = []
+    correlations = []
     for n_part in range(n_partitions):
         partition_path = store_dir / f"company_data/{n_part}"
-        if not partition_path.exists():
-            continue
         log.debug("Calculating correlation part %i of %i", n_part, n_partitions)
         company_part = pd.read_parquet(partition_path, engine="pyarrow")
         corr = rolling_corr(company_part, market_data, window=two_years)
-        corrs.append(corr)
-    corr_result = pd.concat(corrs)
+        # do as much magic as possible to save memory
+        corr = corr.dropna()
+        corr["returns"] = pd.to_numeric(corr["returns"], downcast="float")
+        correlations.append(corr)
+        del company_part
+    del market_data
+    log.debug("Loading and merging correlations")
+    corr_result = pd.concat(correlations)
+    log_mem_usage(log, corr_result, "Final correlations")
     log.info("Saving correlations...")
     corr_result.to_csv(store_dir / "result_corr.csv")
