@@ -19,6 +19,20 @@ then check that your installation is correct by importing the main module:
 $ python -c 'import etl_pipeline_example'
 ```
 
+## Executing
+
+To execute the pipeline, run the python module from the command line and provide
+a directory where you have already created company and market returns data that
+you would like to process. If you provide a directory without existing company
+and market data, it will be created:
+
+```bash
+mkidr workdir
+python -m etl_pipeline_example workdir
+```
+
+The resulting correlations will be saved in csv format in
+`${workdir}/store/result_corr.csv`.
 
 ## Development
 
